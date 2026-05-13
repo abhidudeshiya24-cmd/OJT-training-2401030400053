@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>abhify</title>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body{
+      background:#fff;
+    }
+
+    /* NAVBAR */
+    .navbar{
+      width:100%;
+      height:65px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 40px;
+      border-bottom:1px solid #e5e5e5;
+      background:white;
+    }
+
+    /* LEFT SIDE */
+    .left{
+      display:flex;
+      align-items:center;
+      gap:40px;
+    }
+
+    .logo-text{
+      display:flex;
+      flex-direction:column;
+      line-height:1.1;
+    }
+
+    .logo-text h1{
+      font-size:16px;
+      font-weight:500;
+      letter-spacing:3px;
+      color:#333;
+    }
+
+    .logo-text span{
+      font-size:10px;
+      color:#d81b60;
+      letter-spacing:1px;
+      margin-top:2px;
+    }
+
+    /* MENU */
+    .menu{
+      display:flex;
+      align-items:center;
+      gap:34px;
+    }
+
+    .menu a{
+      text-decoration:none;
+      color:#5a5a5a;
+      font-size:15px;
+      font-weight:400;
+      transition:0.3s;
+    }
+
+    .menu a:hover{
+      color:#000;
+    }
+
+    .dropdown i{
+      font-size:11px;
+      margin-left:5px;
+    }
+
+    /* RIGHT SIDE */
+    .right{
+      display:flex;
+      align-items:center;
+      gap:18px;
+    }
+
+    .theme-box{
+      display:flex;
+      align-items:center;
+      gap:10px;
+
+    }
+
+    .icon{
+      font-size:20px;
+      color:#444;
+      cursor:pointer;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:1000px){
+
+      .menu{
+        display:none;
+      }
+
+      .navbar{
+        padding:0 20px;
+      }
+
+      .logo-text h1{
+        font-size:14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+
+    <!-- LEFT -->
+    <div class="left">
+
+      <!-- LOGO -->
+      <div class="logo">
+
+        <div class="logo-circle">
+          <i class="fa-solid fa-feather"></i>
+        </div>
+
+        <div class="logo-text">
+          <h1>Perfumes by AD</h1>
+        </div>
+
+      </div>
+
+      <!-- MENU -->
+      <div class="menu">
+        <a href="#">News</a>
+
+        <a href="#" class="dropdown">
+          Perfumes <i class="fa-solid fa-angle-down"></i>
+        </a>
+
+        <a href="#">Notes</a>
+        <a href="#">Perfumers</a>
+        <a href="#">Forum</a>
+        <a href="#">Fragram</a>
+        <a href="#">About</a>
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+
+      <div class="theme-box">
+      </div>
+
+      <i class="fa-solid fa-magnifying-glass icon"></i>
+      <i class="fa-regular fa-user icon"></i>
+
+    </div>
+
+  </nav>
+
+</body>
+</html>
