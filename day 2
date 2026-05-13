@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfume Website</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Montserrat',sans-serif;
+    }
+
+    body{
+      background:#f7f7f7;
+    }
+
+    /* NAVBAR */
+
+    .navbar{
+      width:100%;
+      height:70px;
+      background:white;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0 40px;
+      border-bottom:1px solid #ddd;
+      position:sticky;
+      top:0;
+      z-index:1000;
+    }
+
+    .left{
+      display:flex;
+      align-items:center;
+      gap:40px;
+    }
+
+    /* LOGO */
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      cursor:pointer;
+    }
+
+    .logo-circle{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      background:#e91e63;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-size:22px;
+    }
+
+    .logo-text h1{
+      font-size:17px;
+      letter-spacing:2px;
+      color:#333;
+      font-weight:600;
+    }
+
+    .logo-text span{
+      font-size:10px;
+      color:#e91e63;
+      letter-spacing:1px;
+    }
+
+    /* MENU */
+
+    .menu{
+      display:flex;
+      gap:30px;
+    }
+
+    .menu a{
+      text-decoration:none;
+      color:#555;
+      font-size:15px;
+      transition:0.3s;
+      font-weight:500;
+    }
+
+    .menu a:hover{
+      color:black;
+    }
+
+    /* RIGHT SIDE */
+
+    .right{
+      display:flex;
+      align-items:center;
+      gap:20px;
+    }
+
+    /* TOP ICONS */
+
+    .top-icons{
+      display:flex;
+      align-items:center;
+      gap:18px;
+    }
+
+    .top-icons i{
+      font-size:22px;
+      color:#444;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .top-icons i:hover{
+      color:#e91e63;
+    }
+
+    /* SEARCH + USER */
+
+    .icon{
+      font-size:20px;
+      color:#444;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .icon:hover{
+      color:#e91e63;
+    }
+
+    /* RESPONSIVE */
+
+    @media(max-width:900px){
+
+      .menu{
+        display:none;
+      }
+
+      .navbar{
+        padding:0 20px;
+      }
+
+      .logo-text h1{
+        font-size:14px;
+      }
+
+      .top-icons{
+        gap:12px;
+      }
+
+      .top-icons i{
+        font-size:20px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <nav class="navbar">
+
+    <!-- LEFT SIDE -->
+
+    <div class="left">
+
+      <!-- LOGO -->
+
+      <div class="logo">
+
+        <div class="logo-circle">
+          <i class="fa-solid fa-feather"></i>
+        </div>
+
+        <div class="logo-text">
+          <h1>FRAGRANTICA BY AD</h1>
+          <span>FREE TO CHOOSE</span>
+        </div>
+
+      </div>
+
+      <!-- MENU -->
+
+      <div class="menu">
+        <a href="#">News</a>
+        <a href="#">Perfumes</a>
+        <a href="#">Notes</a>
+        <a href="#">Perfumers</a>
+        <a href="#">Forum</a>
+        <a href="#">About</a>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+
+    <div class="right">
+
+      <div class="top-icons">
+        <i class="ri-user-line"></i>
+        <i class="ri-heart-line"></i>
+        <i class="ri-shopping-bag-line"></i>
+      </div>
+
+      <i class="fa-solid fa-magnifying-glass icon"></i>
+
+    </div>
+
+  </nav>
+
+</body>
+</html>
