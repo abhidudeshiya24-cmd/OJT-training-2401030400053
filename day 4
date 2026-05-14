@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fragrance by Abhi</title>
+</head>
+
+<body style="margin:0; font-family:Verdana; background:linear-gradient(to right,#dfd9d9,#e30505); color:white; text-align:center;">
+
+    <div style="padding:120px 20px;">
+        
+        <h1 style="font-size:60px; letter-spacing:4px; color:gold;">
+            Oudbee Fragnance
+        </h1>
+
+        <p style="font-size:35px; color:#f5d28c;">
+            Discover the art of luxury perfumes
+        </p>
+
+        <button style="padding:15px 35px; background:gold; border:none; border-radius:30px; font-size:18px; cursor:pointer;">
+            Explore Now
+        </button>
+
+    </div>
+
+</body>
+</html>
