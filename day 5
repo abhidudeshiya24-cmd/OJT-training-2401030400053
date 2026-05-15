@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfume Website</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Montserrat',sans-serif;
+    }
+
+    body{
+      background:#f7f7f7;
+    }
+
+    /* NAVBAR */
+    .navbar{
+      width:100%;
+      height:70px;
+      background:white;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0 40px;
+      border-bottom:1px solid #ddd;
+      position:sticky;
+      top:0;
+      z-index:1000;
+    }
+
+    .left{
+      display:flex;
+      align-items:center;
+      gap:40px;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      cursor:pointer;
+    }
+
+    .logo-circle{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      background:#e91e63;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-size:22px;
+    }
+
+    .logo-text h1{
+      font-size:17px;
+      letter-spacing:2px;
+      color:#333;
+      font-weight:600;
+    }
+
+    .logo-text span{
+      font-size:10px;
+      color:#e91e63;
+      letter-spacing:1px;
+    }
+
+    .menu{
+      display:flex;
+      gap:30px;
+    }
+
+    .menu a{
+      text-decoration:none;
+      color:#555;
+      font-size:15px;
+      transition:0.3s;
+      font-weight:500;
+    }
+
+    .menu a:hover{
+      color:black;
+    }
+
+    .right{
+      display:flex;
+      align-items:center;
+      gap:20px;
+    }
+
+    .top-icons{
+      display:flex;
+      align-items:center;
+      gap:18px;
+    }
+
+    .top-icons i{
+      font-size:22px;
+      color:#444;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .top-icons i:hover{
+      color:#e91e63;
+    }
+
+    .icon{
+      font-size:20px;
+      color:#444;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .icon:hover{
+      color:#e91e63;
+    }
+
+    /* WEBSITE BACKGROUND */
+
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  background:#000;
+}
+
+/* PERFUME HERO SECTION */
+
+.hero{
+  width:100%;
+  height:100vh;
+
+  /* Perfume Background Image */
+  background:
+  linear-gradient(rgba(0,0,0,0.5),
+  rgba(0,0,0,0.5)),
+
+  url('https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=1920&auto=format&fit=crop');
+
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+/* CONTENT */
+
+.hero-content h1{
+  font-size:70px;
+  color:gold;
+  letter-spacing:5px;
+  margin-bottom:20px;
+}
+
+.hero-content p{
+  font-size:25px;
+  color:white;
+  margin-bottom:30px;
+}
+
+.hero-content button{
+  padding:15px 35px;
+  border:none;
+  border-radius:30px;
+  background:gold;
+  color:black;
+  font-size:18px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.hero-content button:hover{
+  background:white;
+  transform:scale(1.05);
+}
+    @media(max-width:900px){
+      .menu{display:none;}
+      .navbar{padding:0 20px;}
+      .logo-text h1{font-size:14px;}
+      .top-icons{gap:12px;}
+      .top-icons i{font-size:20px;}
+    }
+
+    /* MODAL */
+    .modal{
+      display:none;
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.5);
+      justify-content:center;
+      align-items:center;
+      z-index:2000;
+    }
+
+    .modal-content{
+      background:white;
+      padding:30px;
+      border-radius:10px;
+      width:90%;
+      max-width:400px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.2);
+      position:relative;
+    }
+
+    .modal-content h2{
+      text-align:center;
+      margin-bottom:20px;
+      color:#333;
+    }
+
+    .modal-content form{
+      display:flex;
+      flex-direction:column;
+      gap:15px;
+    }
+
+    .modal-content input{
+      padding:12px;
+      border:1px solid #ddd;
+      border-radius:6px;
+      font-size:14px;
+    }
+
+    .modal-content button{
+      padding:12px;
+      background:#e91e63;
+      color:white;
+      border:none;
+      border-radius:6px;
+      font-size:15px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .modal-content button:hover{
+      background:#d81b60;
+    }
+
+    .toggle-link{
+      text-align:center;
+      margin-top:15px;
+      font-size:14px;
+      color:#555;
+    }
+
+    .toggle-link span{
+      color:#e91e63;
+      cursor:pointer;
+      font-weight:600;
+    }
+
+    .close-btn{
+      position:absolute;
+      top:10px;
+      right:15px;
+      font-size:20px;
+      cursor:pointer;
+      color:#555;
+    }
+
+    .close-btn:hover{
+      color:#e91e63;
+    }
+    /* BEST SELLERS SECTION */
+
+.best-sellers{
+  width:100%;
+  padding:80px 40px;
+  background:#f5f5f5;
+  text-align:center;
+}
+
+.best-sellers h2{
+  font-size:42px;
+  letter-spacing:5px;
+  margin-bottom:60px;
+  color:#111;
+  font-weight:500;
+}
+
+.product-container{
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  flex-wrap:wrap;
+}
+
+.product-card{
+  width:250px;
+  background:white;
+  padding:25px;
+  border-radius:20px;
+  transition:0.4s;
+  box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.product-card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+.product-card img{
+  width:100%;
+  height:280px;
+  object-fit:contain;
+  margin-bottom:20px;
+}
+
+.product-card h3{
+  font-size:18px;
+  letter-spacing:3px;
+  color:#111;
+  margin-bottom:10px;
+}
+
+.brand{
+  color:#777;
+  letter-spacing:4px;
+  margin-bottom:10px;
+  font-size:14px;
+}
+
+.tag{
+  display:inline-block;
+  background:#111;
+  color:white;
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:12px;
+  margin-bottom:12px;
+}
+
+.product-card h4{
+  color:#e91e63;
+  font-size:18px;
+  margin-top:10px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+  .best-sellers{
+    padding:60px 20px;
+  }
+
+  .best-sellers h2{
+    font-size:30px;
+  }
+
+  .product-card{
+    width:100%;
+    max-width:320px;
+  }
+
+}
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="left">
+      <div class="logo">
+        <div class="logo-circle">
+          <i class="fa-solid fa-feather"></i>
+        </div>
+        <div class="logo-text">
+          <h1>FRAGNANCE BY AD</h1>
+          <span>FREE TO CHOOSE</span>
+        </div>
+      </div>
+      <div class="menu">
+        <a href="#">New</a>
+        <a href="#">Perfumes</a>
+        <a href="#">Notes</a>
+        <a href="#">Perfumers</a>
+        <a href="#">Forum</a>
+        <a href="#">About</a>
+      </div>
+    </div>
+    <div class="right">
+      <div class="top-icons">
+        <i class="ri-user-line" id="userIcon"></i>
+        <i class="ri-heart-line"></i>
+        <i class="ri-shopping-bag-line"></i>
+      </div>
+      <i class="fa-solid fa-magnifying-glass icon"></i>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION WITH PERFUME BACKGROUND -->
+
+<section class="hero">
+
+  <div class="hero-content">
+    <h1>Oudbee Fragnance</h1>
+    <p>Discover the art of luxury perfumes</p>
+
+  </div>
+
+</section>
+
+  <!-- MODAL LOGIN/SIGNUP -->
+  <div class="modal" id="authModal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModal">&times;</span>
+      <h2 id="formTitle">Login</h2>
+      <form id="loginForm">
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+
+      <form id="signupForm" style="display:none;">
+        <input type="text" placeholder="Full Name" required>
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Password" required>
+        <input type="password" placeholder="Confirm Password" required>
+        <button type="submit">Sign Up</button>
+      </form>
+
+      <div class="toggle-link">
+        <span id="toggleText">Don't have an account? Sign Up</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const userIcon = document.getElementById("userIcon");
+    const authModal = document.getElementById("authModal");
+    const closeModal = document.getElementById("closeModal");
+    const toggleText = document.getElementById("toggleText");
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+    const formTitle = document.getElementById("formTitle");
+
+    userIcon.addEventListener("click", () => {
+      authModal.style.display = "flex";
+    });
+
+    closeModal.addEventListener("click", () => {
+      authModal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+      if(e.target === authModal){
+        authModal.style.display = "none";
+      }
+    });
+
+    toggleText.addEventListener("click", () => {
+      if(loginForm.style.display !== "none"){
+        loginForm.style.display = "none";
+        signupForm.style.display = "flex";
+        formTitle.textContent = "Sign Up";
+        toggleText.textContent = "Already have an account? Login";
+      } else {
+        signupForm.style.display = "none";
+        loginForm.style.display = "flex";
+        formTitle.textContent = "Login";
+        toggleText.textContent = "Don't have an account? Sign Up";
+      }
+    });
+  </script>
+
+     <!-- BEST SELLERS SECTION -->
+<section class="best-sellers">
+
+  <h2>BEST SELLERS</h2>
+
+  <div class="product-container">
+
+    <!-- PRODUCT 1 -->
+    <div class="product-card">
+      <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop" alt="">
+      <h3>WHITE AMBER</h3>
+     
+
+      <p class="brand">CREED</p>
+      
+      <h4>MRP: ₹ 550</h4>
+      <button onclick="addtocart('WHITE AMBER',550)">
+        Add to cart 
+        </button>
+
+         <button class=""buy-btn" onclick="buyNow('CREED',550)">
+            Buy Now
+        
+        </button> 
+    </div>
+
+    <!-- PRODUCT 2 -->
+    <div class="product-card">
+      <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=800&auto=format&fit=crop" alt="">
+      <h3>BOUQUET DE LA REINE</h3>
+      <p class="brand">FLORIS LONDON</p>
+      <h4>MRP: ₹ 999.00</h4>
+       <button onclick="addtocart('FLOATS LONDON',999)">
+        Add to cart 
+        </button>
+
+         <button class=""buy-btn" onclick="buyNow('FLOATS LONDON',999)">
+            Buy Now
+        
+        </button> 
+    </div>
+
+
+    <!-- PRODUCT 4 -->
+    <div class="product-card">
+      <img src="https://images.unsplash.com/photo-1587017539504-67cfbddac569?q=80&w=800&auto=format&fit=crop" alt="">
+      <h3>FRANGIPANI</h3>
+      <p class="brand">ORMONDE JAYNE</p>
+      <h4>MRP: ₹ 799.00</h4>
+       <button onclick="addtocart('ORMONDE JAYNE',799)">
+        Add to cart 
+        </button>
+
+         <button class=""buy-btn" onclick="buyNow('ORMENDE JAYNE',799)">
+            Buy Now
+        
+        </button> 
+    </div>
+
+    <!-- PRODUCT 5 -->
+    <div class="product-card">
+      <img src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?q=80&w=800&auto=format&fit=crop" alt="">
+      <h3>LEATHER ROUGE</h3>
+      <p class="brand">MILLER HARRIS</p>
+      <h4>MRP: ₹ 899.00</h4>
+       <button onclick="addtocart('MILLER HARRIS',899)">
+        Add to cart 
+        </button>
+
+         <button class=""buy-btn" onclick="buyNow('MILLER HARRIS',899)">
+            Buy Now
+        
+        </button> 
+    </div>
+
+  </div>
+</section>
+</body>
+</html>
