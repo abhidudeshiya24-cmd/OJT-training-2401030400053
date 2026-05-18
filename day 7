@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfume Website - Bootstrap</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f7f7f7;
+    }
+
+    /* Brand Custom Colors & Styles */
+    .text-brand { color: #e91e63 !important; }
+    .bg-brand { background-color: #e91e63 !important; }
+    .btn-brand { background-color: #e91e63; color: white; border: none; }
+    .btn-brand:hover { background-color: #d81b60; color: white; }
+    
+    .logo-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 22px;
+    }
+
+    .nav-link {
+      color: #555 !important;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .nav-link:hover {
+      color: black !important;
+    }
+
+    .top-icons i {
+      font-size: 22px;
+      color: #444;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .top-icons i:hover {
+      color: #e91e63;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=1920&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .btn-gold {
+      background: gold;
+      color: black;
+      transition: 0.3s;
+    }
+    .btn-gold:hover {
+      background: white;
+      transform: scale(1.05);
+    }
+
+    /* Product Cards */
+    .product-card {
+      transition: 0.4s;
+      border-radius: 20px;
+    }
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    .product-img {
+      height: 250px;
+      object-fit: contain;
+    }
+    
+    .cursor-pointer { cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg bg-white sticky-top shadow-sm py-3">
+    <div class="container-fluid px-4">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <div class="logo-circle bg-brand">
+          <i class="fa-solid fa-feather"></i>
+        </div>
+        <div class="lh-1">
+          <h1 class="h6 mb-0 text-dark fw-bold" style="letter-spacing: 2px;">FRAGNANCE BY AD</h1>
+          <span class="text-brand" style="font-size: 10px; letter-spacing: 1px;">FREE TO CHOOSE</span>
+        </div>
+      </a>
+
+      <!-- Mobile Toggle Button -->
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Menu Links & Icons -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto gap-lg-4 mt-3 mt-lg-0 text-center">
+          <li class="nav-item"><a class="nav-link" href="#">New</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Perfumes</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Notes</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Perfumers</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Forum</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+        </ul>
+        
+        <div class="d-flex justify-content-center align-items-center gap-4 top-icons mt-3 mt-lg-0">
+          <i class="ri-user-line" data-bs-toggle="modal" data-bs-target="#authModal"></i>
+          <i class="ri-heart-line"></i>
+          <i class="ri-shopping-bag-line"></i>
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero vh-100 d-flex justify-content-center align-items-center text-center">
+    <div class="container">
+      <h1 class="display-3 fw-bold mb-3" style="color: gold; letter-spacing: 5px;">Oudbee Fragnance</h1>
+      <p class="fs-4 text-white mb-4">Discover the art of luxury perfumes</p>
+      <button class="btn btn-gold rounded-pill px-5 py-3 fw-semibold fs-5">Shop Now</button>
+    </div>
+  </section>
+
+  <!-- BEST SELLERS SECTION -->
+  <section class="py-5 bg-light text-center">
+    <div class="container py-4">
+      <h2 class="display-6 fw-medium text-dark mb-5" style="letter-spacing: 5px;">BEST SELLERS</h2>
+      
+      <div class="row g-4 justify-content-center">
+        <!-- PRODUCT 1 -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="card h-100 border-0 shadow-sm product-card p-3">
+            <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop" class="card-img-top product-img mb-3" alt="White Amber">
+            <div class="card-body p-0 d-flex flex-column">
+              <h5 class="card-title fw-bold" style="letter-spacing: 2px;">WHITE AMBER</h5>
+              <p class="text-secondary mb-2" style="letter-spacing: 3px; font-size: 13px;">CREED</p>
+              <h6 class="text-brand fs-5 mt-auto mb-3">MRP: ₹ 550</h6>
+              <div class="d-flex flex-column gap-2">
+                <button class="btn btn-outline-dark" onclick="addtocart('WHITE AMBER',550)">Add to cart</button>
+                <button class="btn btn-brand" onclick="buyNow('CREED',550)">Buy Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCT 2 -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="card h-100 border-0 shadow-sm product-card p-3">
+            <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=800&auto=format&fit=crop" class="card-img-top product-img mb-3" alt="Bouquet De La Reine">
+            <div class="card-body p-0 d-flex flex-column">
+              <h5 class="card-title fw-bold" style="letter-spacing: 2px;">BOUQUET DE LA REINE</h5>
+              <p class="text-secondary mb-2" style="letter-spacing: 3px; font-size: 13px;">FLORIS LONDON</p>
+              <h6 class="text-brand fs-5 mt-auto mb-3">MRP: ₹ 999</h6>
+              <div class="d-flex flex-column gap-2">
+                <button class="btn btn-outline-dark" onclick="addtocart('FLORIS LONDON',999)">Add to cart</button>
+                <button class="btn btn-brand" onclick="buyNow('FLORIS LONDON',999)">Buy Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCT 3 -->
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="card h-100 border-0 shadow-sm product-card p-3">
+            <img src="https://images.unsplash.com/photo-1587017539504-67cfbddac569?q=80&w=800&auto=format&fit=crop" class="card-img-top product-img mb-3" alt="Frangipani">
+            <div class="card-body p-0 d-flex flex-column">
+              <h5 class="card-title fw-bold" style="letter-spacing: 2px;">FRANGIPANI</h5>
+              <p class="text-secondary mb-2" style="letter-spacing: 3px; font-size: 13px;">ORMONDE JAYNE</p>
+              <h6 class="text-brand fs-5 mt-auto mb-3">MRP: ₹ 799</h6>
+              <div class="d-flex flex-column gap-2">
+                <button class="btn btn-outline-dark" onclick="addtocart('ORMONDE JAYNE',799)">Add to cart</button>
+                <button class="btn btn-brand" onclick="buyNow('ORMONDE JAYNE',799)">Buy Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="card h-100 border-0 shadow-sm product-card p-3">
+            <img src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?q=80&w=800&auto=format&fit=crop" class="card-img-top product-img mb-3" alt="Leather Rouge">
+            <div class="card-body p-0 d-flex flex-column">
+              <h5 class="card-title fw-bold" style="letter-spacing: 2px;">LEATHER ROUGE</h5>
+              <p class="text-secondary mb-2" style="letter-spacing: 3px; font-size: 13px;">MILLER HARRIS</p>
+              <h6 class="text-brand fs-5 mt-auto mb-3">MRP: ₹ 899</h6>
+              <div class="d-flex flex-column gap-2">
+                <button class="btn btn-outline-dark" onclick="addtocart('MILLER HARRIS',899)">Add to cart</button>
+                <button class="btn btn-brand" onclick="buyNow('MILLER HARRIS',899)">Buy Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+      <div class="modal-content p-3 border-0 shadow">
+        <div class="modal-header border-0">
+          <h4 class="modal-title w-100 text-center fw-bold text-dark" id="formTitle">Login</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          
+          
+          <form id="loginForm" class="d-flex flex-column gap-3">
+            <input type="email" class="form-control py-2" placeholder="Email" required>
+            <input type="password" class="form-control py-2" placeholder="Password" required>
+            <button type="submit" class="btn btn-brand py-2 mt-2">Login</button>
+          </form>
+
+          
+          <form id="signupForm" class="d-flex flex-column gap-3" style="display: none !important;">
+            <input type="text" class="form-control py-2" placeholder="Full Name" required>
+            <input type="email" class="form-control py-2" placeholder="Email" required>
+            <input type="password" class="form-control py-2" placeholder="Password" required>
+            <input type="password" class="form-control py-2" placeholder="Confirm Password" required>
+            <button type="submit" class="btn btn-brand py-2 mt-2">Sign Up</button>
+          </form>
+
+          <div class="text-center mt-4">
+            <span class="text-muted" style="font-size: 14px;">
+              <span id="toggleText" class="text-brand fw-semibold cursor-pointer">Don't have an account? Sign Up</span>
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  
+  <script>
+  
+    const toggleText = document.getElementById("toggleText");
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+    const formTitle = document.getElementById("formTitle");
+
+    toggleText.addEventListener("click", () => {
+      
+      if (loginForm.style.display !== "none") {
+        loginForm.style.setProperty("display", "none", "important");
+        signupForm.style.setProperty("display", "flex", "important");
+        formTitle.textContent = "Sign Up";
+        toggleText.textContent = "Already have an account? Login";
+      } else {
+        signupForm.style.setProperty("display", "none", "important");
+        loginForm.style.setProperty("display", "flex", "important");
+        formTitle.textContent = "Login";
+        toggleText.textContent = "Don't have an account? Sign Up";
+      }
+    });
+
+    
+    function addtocart(product, price) {
+        alert("Added " + product + " to cart for ₹" + price);
+    }
+
+    function buyNow(product, price) {
+        alert("Proceeding to buy " + product + " for ₹" + price);
+    }
+  </script>
+</body>
+</html>
