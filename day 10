@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flexbox Layout</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+
+  <!-- Main Container -->
+  <div class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white p-5 text-center text-2xl font-bold">
+      Flexbox Layout
+    </header>
+
+    <!-- Content Area -->
+    <div class="flex flex-1">
+
+      <!-- Sidebar -->
+      <aside class="w-64 bg-gray-800 text-white p-5">
+        <ul class="space-y-4">
+          <li class="hover:text-yellow-300 cursor-pointer">Home</li>
+          <li class="hover:text-yellow-300 cursor-pointer">About</li>
+          <li class="hover:text-yellow-300 cursor-pointer">Services</li>
+          <li class="hover:text-yellow-300 cursor-pointer">Contact</li>
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-6">
+
+        <!-- Cards -->
+        <div class="flex flex-wrap gap-6">
+
+          <div class="bg-white shadow-md rounded-xl p-6 flex-1 min-w-[220px]">
+            <h2 class="text-xl font-semibold mb-2">Card 1</h2>
+            <p class="text-gray-600">
+              Responsive flexbox card using Tailwind CSS.
+            </p>
+          </div>
+
+          <div class="bg-white shadow-md rounded-xl p-6 flex-1 min-w-[220px]">
+            <h2 class="text-xl font-semibold mb-2">Card 2</h2>
+            <p class="text-gray-600">
+              Easily adapts to different screen sizes.
+            </p>
+          </div>
+
+          <div class="bg-white shadow-md rounded-xl p-6 flex-1 min-w-[220px]">
+            <h2 class="text-xl font-semibold mb-2">Card 3</h2>
+            <p class="text-gray-600">
+              Built with Tailwind utility classes.
+            </p>
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center p-4">
+      © 2026 Tailwind Flexbox Example
+    </footer>
+
+  </div>
+
+</body>
+</html>
