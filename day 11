@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CricStat.in — Cricket Intelligence Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<style>
+  :root {
+    --green:   #00c853;
+    --green2:  #69f0ae;
+    --dark:    #050d0a;
+    --dark2:   #0a1a12;
+    --dark3:   #0f2418;
+    --card:    #0d1f15;
+    --border:  #1a3825;
+    --text:    #c8e6c9;
+    --muted:   #4a7c59;
+    --accent:  #ffca28;
+    --red:     #ff5252;
+    --white:   #f0fff4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--dark);
+    color:var(--text);
+    font-family:'Barlow',sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+    cursor:default;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar{width:5px;}
+  ::-webkit-scrollbar-track{background:var(--dark2);}
+  ::-webkit-scrollbar-thumb{background:var(--green);border-radius:3px;}
+
+  /* ─── NOISE TEXTURE OVERLAY ─── */
+  body::before{
+    content:'';
+    position:fixed;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events:none;z-index:0;opacity:.4;
+  }
+
+  /* ─── NAV ─── */
+  nav{
+    position:sticky;top:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 2.5rem;
+    background:rgba(5,13,10,.92);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+    height:64px;
+  }
+  .logo{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:1.9rem;
+    letter-spacing:3px;
+    color:var(--white);
+  }
+  .logo span{color:var(--green);}
+  .nav-links{display:flex;gap:2rem;list-style:none;}
+  .nav-links a{
+    color:var(--muted);
+    text-decoration:none;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.95rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    font-weight:600;
+    transition:color .2s;
+  }
+  .nav-links a:hover,.nav-links a.active{color:var(--green);}
+  .nav-right{display:flex;align-items:center;gap:1rem;}
+  .live-badge{
+    display:flex;align-items:center;gap:.4rem;
+    background:rgba(255,82,82,.12);
+    border:1px solid rgba(255,82,82,.3);
+    border-radius:20px;
+    padding:.25rem .75rem;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.8rem;
+    color:var(--red);
+    letter-spacing:1px;
+    font-weight:600;
+  }
+  .live-dot{
+    width:7px;height:7px;
+    border-radius:50%;
+    background:var(--red);
+    animation:pulse 1.2s infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.7);}}
+
+  /* ─── HERO ─── */
+  .hero{
+    position:relative;
+    min-height:340px;
+    display:flex;align-items:center;
+    padding:3rem 2.5rem;
+    overflow:hidden;
+    border-bottom:1px solid var(--border);
+  }
+  .hero-bg{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 70% 120% at 80% 50%, rgba(0,200,83,.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 80% at 10% 80%, rgba(0,200,83,.05) 0%, transparent 60%),
+      var(--dark2);
+  }
+  .hero-pitch{
+    position:absolute;right:-80px;top:50%;transform:translateY(-50%);
+    width:420px;height:420px;
+    border-radius:50%;
+    border:60px solid rgba(0,200,83,.04);
+    box-shadow:0 0 0 20px rgba(0,200,83,.03),0 0 0 40px rgba(0,200,83,.02);
+  }
+  .hero-content{position:relative;z-index:1;max-width:680px;}
+  .hero-tag{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.8rem;letter-spacing:3px;
+    text-transform:uppercase;color:var(--green);
+    font-weight:600;margin-bottom:.8rem;
+    display:flex;align-items:center;gap:.5rem;
+  }
+  .hero-tag::before{content:'';display:block;width:24px;height:2px;background:var(--green);}
+  .hero h1{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(2.8rem,6vw,5rem);
+    line-height:.95;
+    color:var(--white);
+    letter-spacing:2px;
+    margin-bottom:1.2rem;
+  }
+  .hero h1 em{color:var(--green);font-style:normal;}
+  .hero p{
+    font-size:1.05rem;color:var(--muted);
+    max-width:480px;line-height:1.7;
+    margin-bottom:2rem;
+  }
+  .hero-stats{display:flex;gap:2.5rem;}
+  .hstat{border-left:2px solid var(--green);padding-left:1rem;}
+  .hstat-val{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:2rem;color:var(--white);
+    letter-spacing:1px;
+  }
+  .hstat-lbl{font-size:.75rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+
+  /* ─── SECTION TABS ─── */
+  .tabs-bar{
+    display:flex;gap:0;
+    border-bottom:1px solid var(--border);
+    background:var(--dark2);
+    padding:0 2.5rem;
+    overflow-x:auto;
+  }
+  .tab-btn{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.95rem;font-weight:600;
+    letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--muted);
+    background:none;border:none;
+    padding:1rem 1.6rem;
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+    transition:all .2s;
+    white-space:nowrap;
+  }
+  .tab-btn:hover{color:var(--text);}
+  .tab-btn.active{color:var(--green);border-bottom-color:var(--green);}
+
+  /* ─── MAIN GRID ─── */
+  .main{padding:2rem 2.5rem;max-width:1400px;margin:0 auto;}
+  .section{display:none;}
+  .section.active{display:block;}
+
+  /* ─── CARDS ─── */
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:1.4rem;
+    position:relative;
+    overflow:hidden;
+    transition:border-color .25s,transform .25s;
+  }
+  .card:hover{border-color:rgba(0,200,83,.35);transform:translateY(-2px);}
+  .card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--green),transparent);
+    opacity:0;transition:opacity .25s;
+  }
+  .card:hover::before{opacity:1;}
+  .card-title{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.75rem;letter-spacing:2px;
+    text-transform:uppercase;color:var(--muted);
+    margin-bottom:1rem;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+
+  /* ─── GRID LAYOUTS ─── */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;}
+  .grid-1-2{display:grid;grid-template-columns:1fr 2fr;gap:1.2rem;}
+  .grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:1.2rem;}
+
+  /* ─── LIVE SCORE ─── */
+  .live-matches{display:flex;flex-direction:column;gap:1.2rem;}
+  .match-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:1.6rem;
+    transition:border-color .25s;
+  }
+  .match-card:hover{border-color:rgba(0,200,83,.3);}
+  .match-meta{
+    display:flex;align-items:center;gap:.8rem;
+    margin-bottom:1.2rem;
+  }
+  .match-type{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.7rem;letter-spacing:2px;
+    text-transform:uppercase;
+    background:rgba(0,200,83,.1);
+    border:1px solid rgba(0,200,83,.25);
+    color:var(--green);
+    padding:.2rem .6rem;border-radius:4px;font-weight:600;
+  }
+  .match-type.test{background:rgba(255,202,40,.08);border-color:rgba(255,202,40,.25);color:var(--accent);}
+  .match-type.odi{background:rgba(33,150,243,.08);border-color:rgba(33,150,243,.25);color:#64b5f6;}
+  .match-venue{font-size:.8rem;color:var(--muted);}
+  .match-status{
+    margin-left:auto;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.75rem;letter-spacing:1px;
+    color:var(--red);font-weight:600;
+  }
+  .match-status.completed{color:var(--muted);}
+  .scoreboard{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;}
+  .team{display:flex;flex-direction:column;}
+  .team.away{text-align:right;}
+  .team-name{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:1.5rem;letter-spacing:2px;
+    color:var(--white);
+  }
+  .team-flag{font-size:1.4rem;margin-bottom:.2rem;}
+  .score{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:2rem;font-weight:700;
+    color:var(--green);letter-spacing:1px;
+  }
+  .overs{font-size:.8rem;color:var(--muted);}
+  .vs-divider{text-align:center;}
+  .vs{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:1.2rem;color:var(--muted);
+    letter-spacing:2px;
+  }
+  .crr{font-size:.75rem;color:var(--muted);margin-top:.2rem;}
+  .match-note{
+    margin-top:1rem;padding-top:1rem;
+    border-top:1px solid var(--border);
+    font-size:.85rem;color:var(--accent);
+    font-family:'Barlow Condensed',sans-serif;
+    letter-spacing:.5px;
+  }
+  .batters-table{
+    margin-top:1.2rem;
+    width:100%;border-collapse:collapse;
+    font-size:.85rem;
+  }
+  .batters-table th{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--muted);font-weight:600;
+    padding:.5rem .8rem;text-align:left;
+    border-bottom:1px solid var(--border);
+  }
+  .batters-table td{
+    padding:.55rem .8rem;
+    border-bottom:1px solid rgba(26,56,37,.5);
+    color:var(--text);
+  }
+  .batters-table tr:last-child td{border-bottom:none;}
+  .batters-table .highlight{color:var(--green);font-weight:600;}
+  .batters-table .batting-now::after{
+    content:'●';color:var(--green);margin-left:.4rem;font-size:.6rem;
+  }
+
+  /* ─── UPCOMING SIDEBAR ─── */
+  .upcoming-list{display:flex;flex-direction:column;gap:.8rem;}
+  .upcoming-item{
+    display:flex;align-items:center;gap:1rem;
+    padding:.9rem 1rem;
+    background:rgba(255,255,255,.02);
+    border:1px solid var(--border);
+    border-radius:8px;
+    transition:border-color .2s;
+  }
+  .upcoming-item:hover{border-color:rgba(0,200,83,.25);}
+  .udate{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;font-size:1rem;
+    color:var(--green);
+    min-width:36px;text-align:center;
+  }
+  .uday{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .udiv{width:1px;height:36px;background:var(--border);}
+  .umatch{font-size:.85rem;color:var(--text);}
+  .uvenue{font-size:.72rem;color:var(--muted);margin-top:.15rem;}
+  .utype{
+    margin-left:auto;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.65rem;letter-spacing:1px;text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  /* ─── RANKINGS ─── */
+  .rank-table{width:100%;border-collapse:collapse;}
+  .rank-table th{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--muted);font-weight:600;
+    padding:.7rem 1rem;text-align:left;
+    border-bottom:1px solid var(--border);
+  }
+  .rank-table td{
+    padding:.75rem 1rem;
+    border-bottom:1px solid rgba(26,56,37,.4);
+    font-size:.9rem;color:var(--text);
+  }
+  .rank-table tr:hover td{background:rgba(0,200,83,.03);}
+  .rank-num{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:1.3rem;color:var(--muted);
+    letter-spacing:1px;
+  }
+  .rank-num.top{color:var(--accent);}
+  .rank-flag{font-size:1.1rem;margin-right:.4rem;}
+  .player-name-cell{font-weight:600;color:var(--white);}
+  .rating-bar-wrap{display:flex;align-items:center;gap:.8rem;}
+  .rating-bar{height:4px;background:var(--border);border-radius:2px;flex:1;}
+  .rating-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--green2));}
+  .rating-val{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;color:var(--green);
+    min-width:38px;font-size:.95rem;
+  }
+  .rank-filter{
+    display:flex;gap:.5rem;
+    margin-bottom:1.2rem;
+    flex-wrap:wrap;
+  }
+  .rf-btn{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.75rem;letter-spacing:1px;text-transform:uppercase;font-weight:600;
+    padding:.35rem .85rem;border-radius:20px;
+    border:1px solid var(--border);
+    background:none;color:var(--muted);cursor:pointer;
+    transition:all .2s;
+  }
+  .rf-btn:hover,.rf-btn.active{
+    background:rgba(0,200,83,.1);
+    border-color:rgba(0,200,83,.35);
+    color:var(--green);
+  }
+
+  /* ─── PLAYER RECORDS ─── */
+  .player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;}
+  .player-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    transition:transform .25s,border-color .25s;
+    cursor:pointer;
+  }
+  .player-card:hover{transform:translateY(-4px);border-color:rgba(0,200,83,.35);}
+  .player-header{
+    padding:1.2rem 1.4rem;
+    background:linear-gradient(135deg,rgba(0,200,83,.08),rgba(0,200,83,.02));
+    display:flex;align-items:center;gap:1rem;
+    border-bottom:1px solid var(--border);
+  }
+  .player-avatar{
+    width:52px;height:52px;border-radius:50%;
+    background:linear-gradient(135deg,var(--green),rgba(0,200,83,.3));
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Bebas Neue',sans-serif;
+    font-size:1.4rem;color:var(--dark);
+    flex-shrink:0;
+    border:2px solid rgba(0,200,83,.3);
+  }
+  .player-info{flex:1;}
+  .player-info h3{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;font-size:1.1rem;
+    color:var(--white);letter-spacing:.5px;
+    margin-bottom:.1rem;
+  }
+  .player-info p{font-size:.75rem;color:var(--muted);}
+  .player-role{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.65rem;letter-spacing:1px;text-transform:uppercase;
+    background:rgba(0,200,83,.1);border:1px solid rgba(0,200,83,.2);
+    color:var(--green);padding:.15rem .5rem;border-radius:3px;font-weight:600;
+  }
+  .player-role.bowl{background:rgba(255,82,82,.08);border-color:rgba(255,82,82,.2);color:var(--red);}
+  .player-role.all{background:rgba(255,202,40,.08);border-color:rgba(255,202,40,.2);color:var(--accent);}
+  .player-stats{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    padding:1rem 1.4rem;gap:.8rem;
+  }
+  .pstat{text-align:center;}
+  .pstat-val{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:1.6rem;color:var(--white);
+    letter-spacing:1px;
+  }
+  .pstat-lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
+  .player-footer{
+    padding:.8rem 1.4rem;
+    border-top:1px solid var(--border);
+    display:flex;gap:1.5rem;
+    font-size:.78rem;color:var(--muted);
+  }
+  .player-footer span{display:flex;align-items:center;gap:.3rem;}
+
+  /* ─── MATCH ANALYSIS ─── */
+  .analysis-hero{
+    background:linear-gradient(135deg,rgba(0,200,83,.08),rgba(0,200,83,.02));
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:1.8rem;
+    margin-bottom:1.2rem;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:2rem;align-items:center;
+  }
+  .win-prob{display:flex;flex-direction:column;gap:.8rem;}
+  .win-prob-label{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.72rem;letter-spacing:2px;text-transform:uppercase;
+    color:var(--muted);font-weight:600;
+  }
+  .prob-bar{
+    height:12px;border-radius:6px;
+    background:var(--border);
+    overflow:hidden;display:flex;
+  }
+  .prob-fill-a{
+    background:linear-gradient(90deg,#1565c0,#42a5f5);
+    transition:width 1s ease;
+  }
+  .prob-fill-b{
+    background:linear-gradient(90deg,#e65100,#ff7043);
+    transition:width 1s ease;
+  }
+  .prob-labels{display:flex;justify-content:space-between;font-size:.8rem;}
+  .prob-a{color:#64b5f6;font-weight:600;}
+  .prob-b{color:#ff7043;font-weight:600;}
+  .worm-chart{width:260px;height:140px;}
+  .chart-svg line,.chart-svg path{stroke-width:2;}
+  .chart-label{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.72rem;letter-spacing:2px;text-transform:uppercase;
+    color:var(--muted);font-weight:600;
+    margin-bottom:.6rem;
+  }
+  .phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+  .phase-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:10px;padding:1.2rem;text-align:center;
+  }
+  .phase-name{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--muted);font-weight:600;margin-bottom:.5rem;
+  }
+  .phase-score{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:1.8rem;color:var(--white);letter-spacing:1px;
+  }
+  .phase-rr{font-size:.8rem;color:var(--green);}
+  .bowler-perf{margin-top:1.2rem;}
+  .bp-row{
+    display:flex;align-items:center;gap:1rem;
+    padding:.6rem 0;border-bottom:1px solid rgba(26,56,37,.4);
+  }
+  .bp-name{flex:1;font-size:.88rem;color:var(--text);}
+  .bp-fig{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;font-size:1rem;color:var(--accent);
+  }
+  .bp-econ{font-size:.8rem;color:var(--muted);min-width:40px;text-align:right;}
+  .bp-bar{width:80px;height:4px;background:var(--border);border-radius:2px;}
+  .bp-fill{height:100%;border-radius:2px;background:var(--red);}
+  .partnership-list{display:flex;flex-direction:column;gap:.7rem;}
+  .partnership{
+    display:flex;align-items:center;gap:.8rem;
+    font-size:.85rem;
+  }
+  .p-batters{color:var(--text);flex:1;}
+  .p-runs{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;font-size:1rem;color:var(--green);
+    min-width:50px;text-align:right;
+  }
+  .p-bar-wrap{width:120px;height:5px;background:var(--border);border-radius:3px;}
+  .p-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--green2));}
+
+  /* ─── SEARCH BAR ─── */
+  .search-wrap{
+    display:flex;gap:.8rem;margin-bottom:1.5rem;
+    align-items:center;
+  }
+  .search-input{
+    flex:1;max-width:360px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:.7rem 1.1rem;
+    font-family:'Barlow',sans-serif;
+    font-size:.9rem;
+    color:var(--text);
+    outline:none;
+    transition:border-color .2s;
+  }
+  .search-input::placeholder{color:var(--muted);}
+  .search-input:focus{border-color:rgba(0,200,83,.4);}
+
+  /* ─── TICKER ─── */
+  .ticker-wrap{
+    background:rgba(0,200,83,.06);
+    border-bottom:1px solid rgba(0,200,83,.15);
+    overflow:hidden;
+    height:36px;
+    display:flex;align-items:center;
+  }
+  .ticker-label{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.72rem;letter-spacing:2px;text-transform:uppercase;
+    color:var(--green);font-weight:700;
+    padding:0 1.2rem;
+    background:rgba(0,200,83,.1);
+    height:100%;display:flex;align-items:center;
+    border-right:1px solid rgba(0,200,83,.2);
+    flex-shrink:0;white-space:nowrap;
+  }
+  .ticker-track{display:flex;animation:ticker 45s linear infinite;will-change:transform;}
+  .ticker-item{
+    white-space:nowrap;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.82rem;color:var(--text);
+    padding:0 2.5rem;
+  }
+  .ticker-item .t-score{color:var(--green);font-weight:700;}
+  @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ─── FOOTER ─── */
+  footer{
+    margin-top:4rem;
+    border-top:1px solid var(--border);
+    padding:2rem 2.5rem;
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--dark2);
+    font-size:.8rem;color:var(--muted);
+    flex-wrap:wrap;gap:1rem;
+  }
+  .footer-logo{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:1.4rem;letter-spacing:2px;color:var(--white);
+  }
+  .footer-logo span{color:var(--green);}
+
+  /* ─── ANIMATIONS ─── */
+  .fade-in{animation:fadeIn .5s ease both;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+  /* ─── RESPONSIVE ─── */
+  @media(max-width:900px){
+    .grid-3,.grid-2,.grid-1-2,.grid-2-1{grid-template-columns:1fr;}
+    .analysis-hero{grid-template-columns:1fr;}
+    .worm-chart{width:100%;height:160px;}
+    nav{padding:0 1rem;}
+    .main{padding:1.5rem 1rem;}
+    .hero{padding:2rem 1rem;}
+    .hero-pitch{display:none;}
+    .tabs-bar{padding:0 1rem;}
+  }
+  @media(max-width:600px){
+    .nav-links{display:none;}
+    .phase-grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="logo">Cric<span>Stat</span>.in</div>
+  <ul class="nav-links">
+    <li><a href="#" class="active" data-tab="live">Live</a></li>
+    <li><a href="#" data-tab="records">Records</a></li>
+    <li><a href="#" data-tab="analysis">Analysis</a></li>
+    <li><a href="#" data-tab="rankings">Rankings</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+  </div>
+</nav>
+
+<!-- ─── TICKER ─── -->
+<div class="ticker-wrap">
+  <div class="ticker-label">🏏 LATEST</div>
+  <div style="overflow:hidden;flex:1;">
+    <div class="ticker-track" id="tickerTrack">
+      <span class="ticker-item">IND vs AUS &nbsp;—&nbsp; IND <span class="t-score">287/6 (48.2)</span> &nbsp;·&nbsp; AUS need 14 off 10 balls</span>
+      <span class="ticker-item">ENG vs PAK &nbsp;—&nbsp; PAK <span class="t-score">312/8 (50)</span> &nbsp;·&nbsp; ENG <span class="t-score">189/3 (32.4)</span></span>
+      <span class="ticker-item">SA vs NZ &nbsp;—&nbsp; Match starts in 3h 20m</span>
+      <span class="ticker-item">SL vs WI &nbsp;—&nbsp; SL won by 67 runs</span>
+      <span class="ticker-item">IPL &nbsp;—&nbsp; MI <span class="t-score">201/4 (20)</span> &nbsp;·&nbsp; CSK need 202 off 20</span>
+      <span class="ticker-item">Rohit Sharma scores century — <span class="t-score">104* (89)</span></span>
+      <span class="ticker-item">IND vs AUS &nbsp;—&nbsp; IND <span class="t-score">287/6 (48.2)</span> &nbsp;·&nbsp; AUS need 14 off 10 balls</span>
+      <span class="ticker-item">ENG vs PAK &nbsp;—&nbsp; PAK <span class="t-score">312/8 (50)</span> &nbsp;·&nbsp; ENG <span class="t-score">189/3 (32.4)</span></span>
+      <span class="ticker-item">SA vs NZ &nbsp;—&nbsp; Match starts in 3h 20m</span>
+      <span class="ticker-item">SL vs WI &nbsp;—&nbsp; SL won by 67 runs</span>
+      <span class="ticker-item">IPL &nbsp;—&nbsp; MI <span class="t-score">201/4 (20)</span> &nbsp;·&nbsp; CSK need 202 off 20</span>
+      <span class="ticker-item">Rohit Sharma scores century — <span class="t-score">104* (89)</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pitch"></div>
+  <div class="hero-content fade-in">
+    <div class="hero-tag">Cricket Intelligence Hub</div>
+    <h1>Numbers<br>Behind the <em>Game</em></h1>
+    <p>Deep stats, live scores, career records and match intelligence — everything cricket in one place.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val" data-count="14800">0</div><div class="hstat-lbl">Players</div></div>
+      <div class="hstat"><div class="hstat-val" data-count="9200">0</div><div class="hstat-lbl">Matches</div></div>
+      <div class="hstat"><div class="hstat-val" data-count="3">0</div><div class="hstat-lbl">Live Now</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TABS BAR ─── -->
+<div class="tabs-bar">
+  <button class="tab-btn active" data-tab="live">🔴 Live Scores</button>
+  <button class="tab-btn" data-tab="records">🏆 Player Records</button>
+  <button class="tab-btn" data-tab="analysis">📊 Match Analysis</button>
+  <button class="tab-btn" data-tab="rankings">🌍 Rankings</button>
+</div>
+
+<!-- ─── MAIN ─── -->
+<div class="main">
+
+  <!-- ══ LIVE SCORES ══ -->
+  <div class="section active fade-in" id="sec-live">
+    <div class="grid-2-1" style="align-items:start;">
+      <div>
+        <div class="card-title" style="margin-bottom:1rem;">Live Matches</div>
+        <div class="live-matches">
+
+          <!-- Match 1 -->
+          <div class="match-card">
+            <div class="match-meta">
+              <span class="match-type">T20I</span>
+              <span class="match-venue">🏟 Wankhede Stadium, Mumbai</span>
+              <span class="match-status">🔴 LIVE — 48th Over</span>
+            </div>
+            <div class="scoreboard">
+              <div class="team">
+                <div class="team-flag">🇮🇳</div>
+                <div class="team-name">INDIA</div>
+                <div class="score">287/6</div>
+                <div class="overs">(48.2 overs)</div>
+              </div>
+              <div class="vs-divider">
+                <div class="vs">VS</div>
+                <div class="crr">CRR 5.94</div>
+              </div>
+              <div class="team away">
+                <div class="team-flag">🇦🇺</div>
+                <div class="team-name">AUSTRALIA</div>
+                <div class="score">—</div>
+                <div class="overs">Yet to bat</div>
+              </div>
+            </div>
+            <table class="batters-table">
+              <thead>
+                <tr><th>Batter</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="batting-now highlight">Rohit Sharma</td><td class="highlight">104</td><td>89</td><td>9</td><td>5</td><td>116.8</td></tr>
+                <tr><td class="batting-now">Hardik Pandya</td><td>38</td><td>21</td><td>2</td><td>3</td><td>180.9</td></tr>
+                <tr><td>Virat Kohli</td><td>72</td><td>61</td><td>6</td><td>1</td><td>118.0</td></tr>
+              </tbody>
+            </table>
+            <div class="match-note">🏏 India needs 2 more wickets to bat. AUS need 14 off last 10 balls — THRILLER!</div>
+          </div>
+
+          <!-- Match 2 -->
+          <div class="match-card">
+            <div class="match-meta">
+              <span class="match-type odi">ODI</span>
+              <span class="match-venue">🏟 The Oval, London</span>
+              <span class="match-status">🔴 LIVE — 33rd Over</span>
+            </div>
+            <div class="scoreboard">
+              <div class="team">
+                <div class="team-flag">🇵🇰</div>
+                <div class="team-name">PAKISTAN</div>
+                <div class="score">312/8</div>
+                <div class="overs">(50 overs)</div>
+              </div>
+              <div class="vs-divider">
+                <div class="vs">VS</div>
+                <div class="crr">CRR 5.81</div>
+              </div>
+              <div class="team away">
+                <div class="team-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+                <div class="team-name">ENGLAND</div>
+                <div class="score">189/3</div>
+                <div class="overs">(32.4 overs)</div>
+              </div>
+            </div>
+            <table class="batters-table">
+              <thead>
+                <tr><th>Batter</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="batting-now highlight">Joe Root</td><td class="highlight">87</td><td>94</td><td>7</td><td>1</td><td>92.5</td></tr>
+                <tr><td class="batting-now">Ben Stokes</td><td>45</td><td>38</td><td>4</td><td>2</td><td>118.4</td></tr>
+              </tbody>
+            </table>
+            <div class="match-note">🎯 ENG require 124 off 104 balls. Required RR: 7.15</div>
+          </div>
+
+          <!-- Match 3 — Completed -->
+          <div class="match-card">
+            <div class="match-meta">
+              <span class="match-type test">TEST</span>
+              <span class="match-venue">🏟 Newlands, Cape Town</span>
+              <span class="match-status completed">COMPLETED</span>
+            </div>
+            <div class="scoreboard">
+              <div class="team">
+                <div class="team-flag">🇿🇦</div>
+                <div class="team-name">S AFRICA</div>
+                <div class="score">451/7d</div>
+                <div class="overs">& 210/3d</div>
+              </div>
+              <div class="vs-divider">
+                <div class="vs">VS</div>
+              </div>
+              <div class="team away">
+                <div class="team-flag">🇳🇿</div>
+                <div class="team-name">NEW ZEALAND</div>
+                <div class="score">289</div>
+                <div class="overs">& 198</div>
+              </div>
+            </div>
+            <div class="match-note" style="color:var(--green2);">✅ South Africa won by 174 runs</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div>
+        <div class="card" style="margin-bottom:1.2rem;">
+          <div class="card-title">Upcoming Fixtures <span style="color:var(--green);">7 matches</span></div>
+          <div class="upcoming-list">
+            <div class="upcoming-item">
+              <div><div class="udate">27</div><div class="uday">May</div></div>
+              <div class="udiv"></div>
+              <div><div class="umatch">🇮🇳 India vs 🇱🇰 Sri Lanka</div><div class="uvenue">Eden Gardens, Kolkata</div></div>
+              <div class="utype">T20I</div>
+            </div>
+            <div class="upcoming-item">
+              <div><div class="udate">28</div><div class="uday">May</div></div>
+              <div class="udiv"></div>
+              <div><div class="umatch">🇧🇩 Bangladesh vs 🇿🇦 S Africa</div><div class="uvenue">Mirpur, Dhaka</div></div>
+              <div class="utype">ODI</div>
+            </div>
+            <div class="upcoming-item">
+              <div><div class="udate">29</div><div class="uday">May</div></div>
+              <div class="udiv"></div>
+              <div><div class="umatch">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England vs 🇵🇰 Pakistan</div><div class="uvenue">Lord's, London</div></div>
+              <div class="utype">TEST</div>
+            </div>
+            <div class="upcoming-item">
+              <div><div class="udate">30</div><div class="uday">May</div></div>
+              <div class="udiv"></div>
+              <div><div class="umatch">🇦🇺 Australia vs 🇼🇸 West Indies</div><div class="uvenue">MCG, Melbourne</div></div>
+              <div class="utype">ODI</div>
+            </div>
+            <div class="upcoming-item">
+              <div><div class="udate">01</div><div class="uday">Jun</div></div>
+              <div class="udiv"></div>
+              <div><div class="umatch">🇮🇳 India vs 🇦🇺 Australia</div><div class="uvenue">Chepauk, Chennai</div></div>
+              <div class="utype">ODI</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Top Scorers — Today</div>
+          <table class="rank-table">
+            <thead><tr><th>#</th><th>Player</th><th>Runs</th><th>SR</th></tr></thead>
+            <tbody>
+              <tr><td><span class="rank-num top">1</span></td><td><span class="rank-flag">🇮🇳</span>Rohit Sharma</td><td class="highlight" style="color:var(--green);font-weight:700;">104*</td><td>116.8</td></tr>
+              <tr><td><span class="rank-num top">2</span></td><td><span class="rank-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>Joe Root</td><td>87*</td><td>92.5</td></tr>
+              <tr><td><span class="rank-num">3</span></td><td><span class="rank-flag">🇮🇳</span>Virat Kohli</td><td>72</td><td>118.0</td></tr>
+              <tr><td><span class="rank-num">4</span></td><td><span class="rank-flag">🇮🇳</span>Hardik Pandya</td><td>38</td><td>180.9</td></tr>
+              <tr><td><span class="rank-num">5</span></td><td><span class="rank-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>Ben Stokes</td><td>45</td><td>118.4</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PLAYER RECORDS ══ -->
+  <div class="section fade-in" id="sec-records">
+    <div class="search-wrap">
+      <input class="search-input" id="playerSearch" type="text" placeholder="Search player by name or country…">
+      <div class="rank-filter">
+        <button class="rf-btn active" data-filter="all">All</button>
+        <button class="rf-btn" data-filter="bat">Batters</button>
+        <button class="rf-btn" data-filter="bowl">Bowlers</button>
+        <button class="rf-btn" data-filter="all-rounder">All-rounders</button>
+      </div>
+    </div>
+    <div class="player-grid" id="playerGrid">
+
+      <div class="player-card" data-role="bat">
+        <div class="player-header">
+          <div class="player-avatar">VS</div>
+          <div class="player-info"><h3>Virat Kohli</h3><p>🇮🇳 India &nbsp;·&nbsp; Right-hand bat</p></div>
+          <div class="player-role">Batter</div>
+        </div>
+        <div class="player-stats">
+          <div class="pstat"><div class="pstat-val">27765</div><div class="pstat-lbl">Runs</div></div>
+          <div class="pstat"><div class="pstat-val">80</div><div class="pstat-lbl">100s</div></div>
+          <div class="pstat"><div class="pstat-val">59.8</div><div class="pstat-lbl">Avg</div></div>
+        </div>
+        <div class="player-footer">
+          <span>🏏 ODI: 14256 runs</span>
+          <span>📅 Tests: 9230 runs</span>
+        </div>
+      </div>
+
+      <div class="player-card" data-role="bat">
+        <div class="player-header">
+          <div class="player-avatar">RS</div>
+          <div class="player-info"><h3>Rohit Sharma</h3><p>🇮🇳 India &nbsp;·&nbsp; Right-hand bat</p></div>
+          <div class="player-role">Batter</div>
+        </div>
+        <div class="player-stats">
+          <div class="pstat"><div class="pstat-val">24008</div><div class="pstat-lbl">Runs</div></div>
+          <div class="pstat"><div class="pstat-val">48</div><div class="pstat-lbl">100s</div></div>
+          <div class="pstat"><div class="pstat-val">48.9</div><div class="pstat-lbl">Avg</div></div>
+        </div>
+        <div class="player-footer">
+          <span>🏏 ODI: 10827 runs</span>
+          <span>📅 Tests: 4301 runs</span>
+        </div>
+      </div>
+
+      <div class="player-card" data-role="bowl">
+        <div class="player-header">
+          <div class="player-avatar">JB</div>
+          <div class="player-info"><h3>Jasprit Bumrah</h3><p>🇮🇳 India &nbsp;·&nbsp; Right-arm fast</p></div>
+          <div class="player-role bowl">Bowler</div>
+        </div>
+        <div class="player-stats">
+          <div class="pstat"><div class="pstat-val">398</div><div class="pstat-lbl">Wkts</div></div>
+          <div class="pstat"><div class="pstat-val">4.01</div><div class="pstat-lbl">Econ</div></div>
+          <div class="pstat"><div class="pstat-val">22.1</div><div class="pstat-lbl">Avg</div></div>
+        </div>
+        <div class="player-footer">
+          <span>📅 Tests: 195 wkts</span>
+          <span>🏏 ODI: 154 wkts</span>
+        </div>
+      </div>
+
+      <div class="player-card" data-role="bat">
+        <div class="player-header">
+          <div class="player-avatar">JR</div>
+          <div class="player-info"><h3>Joe Root</h3><p>🏴󠁧󠁢󠁥󠁮󠁧󠁿 England &nbsp;·&nbsp; Right-hand bat</p></div>
+          <div class="player-role">Batter</div>
+        </div>
+        <div class="player-stats">
+          <div class="pstat"><div class="pstat-val">13948</div><div class="pstat-lbl">Runs</div></div>
+          <div class="pstat"><div class="pstat-val">35</div><div class="pstat-lbl">100s</div></div>
+          <div class="pstat"><div class="pstat-val">51.2</div><div class="pstat-lbl">Avg</div></div>
+        </div>
+        <div class="player-footer">
+          <span>📅 Tests: 12891 runs</span>
+          <span>🏏 ODI: 6907 runs</span>
+        </div>
+      </div>
+
+      <div class="player-card" data-role="bowl">
+        <div class="player-header">
+          <div class="player-avatar">SA</div>
+          <div class="player-info"><h3>Shaheen Afridi</h3><p>🇵🇰 Pakistan &nbsp;·&nbsp; Left-arm fast</p></div>
+          <div class="player-role bowl">Bowler</div>
+        </div>
+        <div class="player-stats">
+          <div class="pstat"><div class="pstat-val">287</div><div class="pstat-lbl">Wkts</div></div>
+          <div class="pstat"><div class="pstat-val">4.39</div><div class="pstat-lbl">Econ</div></div>
+          <div class="pstat"><div class="pstat-val">27.4</div><div class="pstat-lbl">Avg</div></div>
+        </div>
+        <div class="player-footer">
+          <span>📅 Tests: 109 wkts</span>
+          <span>🏏 ODI: 90 wkts</span>
+        </div>
+      </div>
+
+      <div class="player-card" data-role="all-rounder">
+        <div class="player-header">
+          <div class="player-avatar">BS</div>
+          <div class="player-info"><h3>Ben Stokes</h3><p>🏴󠁧󠁢󠁥󠁮󠁧󠁿 England &nbsp;·&nbsp; Left-hand bat</p></div>
+          <div class="player-role all">All-rounder</div>
+        </div>
+        <div class="player-stats">
+          <div class="pstat"><div class="pstat-val">6512</div><div class="pstat-lbl">Runs</div></div>
+          <div class="pstat"><div class="pstat-val">195</div><div class="pstat-lbl">Wkts</div></div>
+          <div class="pstat"><div class="pstat-val">38.1</div><div class="pstat-lbl">Avg</div></div>
+        </div>
+        <div class="player-footer">
+          <span>📅 Tests: 187 wkts</span>
+          <span>🏏 5000+ test runs</span>
+        </div>
+      </div>
+
+      <div class="player-card" data-role="all-rounder">
+        <div class="player-header">
+          <div class="player-avatar">HP</div>
+          <div class="player-info"><h3>Hardik Pandya</h3><p>🇮🇳 India &nbsp;·&nbsp; Right-hand bat</p></div>
+          <div class="player-role all">All-rounder</div>
+        </div>
+        <div class="player-stats">
+          <div class="pstat"><div class="pstat-val">4218</div><div class="pstat-lbl">Runs</div></div>
+          <div class="pstat"><div class="pstat-val">146</div><div class="pstat-lbl">Wkts</div></div>
+          <div class="pstat"><div class="pstat-val">32.7</div><div class="pstat-lbl">Avg</div></div>
+        </div>
+        <div class="player-footer">
+          <span>🏏 ODI SR: 117.4</span>
+          <span>📅 IPL: 1800+ runs</span>
+        </div>
+      </div>
+
+      <div class="player-card" data-role="bowl">
+        <div class="player-header">
+          <div class="player-avatar">KR</div>
+          <div class="player-info"><h3>Kagiso Rabada</h3><p>🇿🇦 S Africa &nbsp;·&nbsp; Right-arm fast</p></div>
+          <div class="player-role bowl">Bowler</div>
+        </div>
+        <div class="player-stats">
+          <div class="pstat"><div class="pstat-val">321</div><div class="pstat-lbl">Wkts</div></div>
+          <div class="pstat"><div class="pstat-val">4.18</div><div class="pstat-lbl">Econ</div></div>
+          <div class="pstat"><div class="pstat-val">24.6</div><div class="pstat-lbl">Avg</div></div>
+        </div>
+        <div class="player-footer">
+          <span>📅 Tests: 220 wkts</span>
+          <span>🏏 ODI: 167 wkts</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ MATCH ANALYSIS ══ -->
+  <div class="section fade-in" id="sec-analysis">
+    <div class="analysis-hero">
+      <div>
+        <div class="win-prob-label" style="margin-bottom:.8rem;">🏏 IND vs AUS — Win Probability</div>
+        <div class="win-prob">
+          <div class="prob-labels"><span class="prob-a">🇮🇳 India &nbsp; 68%</span><span class="prob-b">32% &nbsp; Australia 🇦🇺</span></div>
+          <div class="prob-bar"><div class="prob-fill-a" id="probA" style="width:68%"></div><div class="prob-fill-b" style="width:32%"></div></div>
+        </div>
+        <div style="margin-top:1.2rem;font-size:.82rem;color:var(--muted);">
+          Current RR: 5.94 &nbsp;·&nbsp; Required RR: 8.40 &nbsp;·&nbsp; Match Tempo: 🔥 High
+        </div>
+      </div>
+      <div>
+        <div class="chart-label">Run Worm — IND Innings</div>
+        <svg class="worm-chart chart-svg" viewBox="0 0 260 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00c853" stop-opacity=".3"/>
+              <stop offset="100%" stop-color="#00c853" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- Grid lines -->
+          <line x1="0" y1="28" x2="260" y2="28" stroke="#1a3825" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="0" y1="56" x2="260" y2="56" stroke="#1a3825" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="0" y1="84" x2="260" y2="84" stroke="#1a3825" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="0" y1="112" x2="260" y2="112" stroke="#1a3825" stroke-width="1" stroke-dasharray="4,4"/>
+          <!-- Area fill -->
+          <path d="M0,140 L0,130 Q20,120 40,108 Q60,96 80,88 Q100,80 120,65 Q140,50 160,42 Q180,30 200,24 L220,18 L240,14 L260,10 L260,140 Z" fill="url(#wg)"/>
+          <!-- Worm line -->
+          <path d="M0,130 Q20,120 40,108 Q60,96 80,88 Q100,80 120,65 Q140,50 160,42 Q180,30 200,24 L220,18 L240,14 L260,10" stroke="#00c853" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Dot at end -->
+          <circle cx="260" cy="10" r="4" fill="#69f0ae"/>
+          <!-- Labels -->
+          <text x="2" y="138" fill="#4a7c59" font-size="9" font-family="Barlow Condensed">0</text>
+          <text x="2" y="110" fill="#4a7c59" font-size="9" font-family="Barlow Condensed">100</text>
+          <text x="2" y="58" fill="#4a7c59" font-size="9" font-family="Barlow Condensed">200</text>
+          <text x="2" y="12" fill="#4a7c59" font-size="9" font-family="Barlow Condensed">287</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:1.2rem;">
+      <div class="card">
+        <div class="card-title">Phase Breakdown — India</div>
+        <div class="phase-grid" style="grid-template-columns:1fr;gap:.7rem;">
+          <div class="phase-card">
+            <div class="phase-name">Powerplay (1-10)</div>
+            <div class="phase-score">72/1</div>
+            <div class="phase-rr">RR 7.20</div>
+          </div>
+          <div class="phase-card">
+            <div class="phase-name">Middle (11-40)</div>
+            <div class="phase-score">148/4</div>
+            <div class="phase-rr">RR 4.93</div>
+          </div>
+          <div class="phase-card">
+            <div class="phase-name">Death (41-50)</div>
+            <div class="phase-score">67/1</div>
+            <div class="phase-rr">RR 7.44</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Bowling Figures — AUS</div>
+        <div class="bowler-perf">
+          <div class="bp-row"><div class="bp-name">Pat Cummins</div><div class="bp-bar"><div class="bp-fill" style="width:60%"></div></div><div class="bp-fig">2/54</div><div class="bp-econ">5.4</div></div>
+          <div class="bp-row"><div class="bp-name">Mitchell Starc</div><div class="bp-bar"><div class="bp-fill" style="width:40%"></div></div><div class="bp-fig">1/61</div><div class="bp-econ">6.1</div></div>
+          <div class="bp-row"><div class="bp-name">Josh Hazlewood</div><div class="bp-bar"><div class="bp-fill" style="width:30%"></div></div><div class="bp-fig">1/48</div><div class="bp-econ">4.8</div></div>
+          <div class="bp-row"><div class="bp-name">Adam Zampa</div><div class="bp-bar"><div class="bp-fill" style="width:20%"></div></div><div class="bp-fig">1/52</div><div class="bp-econ">5.2</div></div>
+          <div class="bp-row"><div class="bp-name">Travis Head</div><div class="bp-bar"><div class="bp-fill" style="width:10%"></div></div><div class="bp-fig">0/34</div><div class="bp-econ">6.8</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Partnership Analysis</div>
+        <div class="partnership-list">
+          <div class="partnership">
+            <div class="p-batters">Rohit – Gill (Wkt 1)</div>
+            <div class="p-bar-wrap"><div class="p-bar-fill" style="width:75%"></div></div>
+            <div class="p-runs">112</div>
+          </div>
+          <div class="partnership">
+            <div class="p-batters">Gill – Kohli (Wkt 2)</div>
+            <div class="p-bar-wrap"><div class="p-bar-fill" style="width:40%"></div></div>
+            <div class="p-runs">58</div>
+          </div>
+          <div class="partnership">
+            <div class="p-batters">Kohli – Rohit (Wkt 3)</div>
+            <div class="p-bar-wrap"><div class="p-bar-fill" style="width:55%"></div></div>
+            <div class="p-runs">81</div>
+          </div>
+          <div class="partnership">
+            <div class="p-batters">Rohit – Pandya (Wkt 4)</div>
+            <div class="p-bar-wrap"><div class="p-bar-fill" style="width:25%"></div></div>
+            <div class="p-runs">36</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Key Match Moments</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:.5rem;">
+        <div style="background:rgba(0,200,83,.05);border:1px solid rgba(0,200,83,.15);border-radius:8px;padding:1rem;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--green);">Over 9.4</div>
+          <div style="font-size:.85rem;color:var(--text);margin-top:.3rem;">Rohit Sharma slams consecutive sixes off Cummins — powerplay carnage</div>
+        </div>
+        <div style="background:rgba(255,82,82,.05);border:1px solid rgba(255,82,82,.15);border-radius:8px;padding:1rem;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--red);">Over 24.1</div>
+          <div style="font-size:.85rem;color:var(--text);margin-top:.3rem;">Virat Kohli departs for 72 — breakthrough for Australia</div>
+        </div>
+        <div style="background:rgba(255,202,40,.05);border:1px solid rgba(255,202,40,.15);border-radius:8px;padding:1rem;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--accent);">Over 40.3</div>
+          <div style="font-size:.85rem;color:var(--text);margin-top:.3rem;">Rohit Sharma reaches CENTURY — 104 off 89 balls 🎉</div>
+        </div>
+        <div style="background:rgba(33,150,243,.05);border:1px solid rgba(33,150,243,.15);border-radius:8px;padding:1rem;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#64b5f6;">Over 48.2</div>
+          <div style="font-size:.85rem;color:var(--text);margin-top:.3rem;">India post 287 — Pandya's 38 off 21 balls a crucial cameo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RANKINGS ══ -->
+  <div class="section fade-in" id="sec-rankings">
+    <div class="rank-filter" id="rankFilter">
+      <button class="rf-btn active" data-rank="batting">Batting</button>
+      <button class="rf-btn" data-rank="bowling">Bowling</button>
+      <button class="rf-btn" data-rank="all-rounder">All-rounder</button>
+      <button class="rf-btn" data-rank="team">Teams</button>
+    </div>
+
+    <div class="grid-2" style="align-items:start;">
+
+      <!-- ODI Rankings -->
+      <div class="card">
+        <div class="card-title">ODI Rankings <span id="rankTypeLabel" style="color:var(--green);">Batting</span></div>
+        <table class="rank-table" id="odiTable">
+          <thead>
+            <tr><th>#</th><th>Player</th><th>Country</th><th>Rating</th><th>Trend</th></tr>
+          </thead>
+          <tbody id="odiBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Test Rankings -->
+      <div class="card">
+        <div class="card-title">Test Rankings <span style="color:var(--accent);">Batting</span></div>
+        <table class="rank-table">
+          <thead>
+            <tr><th>#</th><th>Player</th><th>Country</th><th>Rating</th><th>Trend</th></tr>
+          </thead>
+          <tbody id="testBody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-logo">Cric<span>Stat</span>.in</div>
+  <div>© 2026 CricStat.in &nbsp;·&nbsp; Live Cricket Statistics Platform</div>
+  <div style="display:flex;gap:1.5rem;">
+    <a href="#" style="color:var(--muted);text-decoration:none;">About</a>
+    <a href="#" style="color:var(--muted);text-decoration:none;">API</a>
+    <a href="#" style="color:var(--muted);text-decoration:none;">Contact</a>
+  </div>
+</footer>
+
+<script>
+$(function(){
+
+  // ─── TAB SWITCHING ───
+  function switchTab(tab){
+    $('.tab-btn').removeClass('active');
+    $('.nav-links a').removeClass('active');
+    $(`.tab-btn[data-tab="${tab}"]`).addClass('active');
+    $(`.nav-links a[data-tab="${tab}"]`).addClass('active');
+    $('.section').removeClass('active');
+    $(`#sec-${tab}`).addClass('active').addClass('fade-in');
+  }
+  $('.tab-btn').on('click',function(){ switchTab($(this).data('tab')); });
+  $('.nav-links a').on('click',function(e){
+    e.preventDefault();
+    switchTab($(this).data('tab'));
+  });
+
+  // ─── HERO COUNTER ───
+  $('[data-count]').each(function(){
+    const $el=$(this), target=parseInt($el.data('count')), suffix=$el.data('count')>100?'':'';
+    let curr=0;
+    const inc=Math.max(1,Math.floor(target/60));
+    const timer=setInterval(function(){
+      curr=Math.min(curr+inc,target);
+      $el.text(curr.toLocaleString()+suffix);
+      if(curr>=target) clearInterval(timer);
+    },20);
+  });
+
+  // ─── RANKING DATA ───
+  const rankData={
+    batting:{
+      odi:[
+        {r:1,name:'Virat Kohli',flag:'🇮🇳',country:'India',rating:887,trend:'▲'},
+        {r:2,name:'Rohit Sharma',flag:'🇮🇳',country:'India',rating:852,trend:'▲'},
+        {r:3,name:'Babar Azam',flag:'🇵🇰',country:'Pakistan',rating:838,trend:'▼'},
+        {r:4,name:'Joe Root',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',country:'England',rating:821,trend:'▲'},
+        {r:5,name:'Steve Smith',flag:'🇦🇺',country:'Australia',rating:810,trend:'—'},
+        {r:6,name:'Shubman Gill',flag:'🇮🇳',country:'India',rating:798,trend:'▲'},
+        {r:7,name:'Kane Williamson',flag:'🇳🇿',country:'New Zealand',rating:787,trend:'—'},
+        {r:8,name:'Fakhar Zaman',flag:'🇵🇰',country:'Pakistan',rating:776,trend:'▲'},
+      ],
+      test:[
+        {r:1,name:'Joe Root',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',country:'England',rating:904,trend:'▲'},
+        {r:2,name:'Steve Smith',flag:'🇦🇺',country:'Australia',rating:892,trend:'—'},
+        {r:3,name:'Virat Kohli',flag:'🇮🇳',country:'India',rating:875,trend:'▲'},
+        {r:4,name:'Kane Williamson',flag:'🇳🇿',country:'New Zealand',rating:868,trend:'▼'},
+        {r:5,name:'Marnus Labuschagne',flag:'🇦🇺',country:'Australia',rating:850,trend:'—'},
+        {r:6,name:'Dimuth Karunaratne',flag:'🇱🇰',country:'Sri Lanka',rating:831,trend:'▼'},
+        {r:7,name:'David Warner',flag:'🇦🇺',country:'Australia',rating:815,trend:'—'},
+        {r:8,name:'Rohit Sharma',flag:'🇮🇳',country:'India',rating:803,trend:'▲'},
+      ]
+    },
+    bowling:{
+      odi:[
+        {r:1,name:'Jasprit Bumrah',flag:'🇮🇳',country:'India',rating:896,trend:'▲'},
+        {r:2,name:'Shaheen Afridi',flag:'🇵🇰',country:'Pakistan',rating:858,trend:'▲'},
+        {r:3,name:'Trent Boult',flag:'🇳🇿',country:'New Zealand',rating:841,trend:'—'},
+        {r:4,name:'Kagiso Rabada',flag:'🇿🇦',country:'S Africa',rating:827,trend:'▲'},
+        {r:5,name:'Pat Cummins',flag:'🇦🇺',country:'Australia',rating:815,trend:'▼'},
+        {r:6,name:'Mohammed Siraj',flag:'🇮🇳',country:'India',rating:800,trend:'▲'},
+        {r:7,name:'Mark Wood',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',country:'England',rating:791,trend:'—'},
+        {r:8,name:'Lockie Ferguson',flag:'🇳🇿',country:'New Zealand',rating:780,trend:'▼'},
+      ],
+      test:[
+        {r:1,name:'Pat Cummins',flag:'🇦🇺',country:'Australia',rating:912,trend:'▲'},
+        {r:2,name:'Jasprit Bumrah',flag:'🇮🇳',country:'India',rating:905,trend:'▲'},
+        {r:3,name:'Kagiso Rabada',flag:'🇿🇦',country:'S Africa',rating:880,trend:'—'},
+        {r:4,name:'Ben Stokes',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',country:'England',rating:858,trend:'▲'},
+        {r:5,name:'Ravichandran Ashwin',flag:'🇮🇳',country:'India',rating:851,trend:'—'},
+        {r:6,name:'Nathan Lyon',flag:'🇦🇺',country:'Australia',rating:840,trend:'▼'},
+        {r:7,name:'Shaheen Afridi',flag:'🇵🇰',country:'Pakistan',rating:828,trend:'▲'},
+        {r:8,name:'Tim Southee',flag:'🇳🇿',country:'New Zealand',rating:815,trend:'▼'},
+      ]
+    },
+    'all-rounder':{
+      odi:[
+        {r:1,name:'Ben Stokes',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',country:'England',rating:408,trend:'▲'},
+        {r:2,name:'Hardik Pandya',flag:'🇮🇳',country:'India',rating:388,trend:'▲'},
+        {r:3,name:'Shakib Al Hasan',flag:'🇧🇩',country:'Bangladesh',rating:362,trend:'▼'},
+        {r:4,name:'Jason Holder',flag:'🇼🇸',country:'West Indies',rating:341,trend:'—'},
+        {r:5,name:'Glenn Maxwell',flag:'🇦🇺',country:'Australia',rating:328,trend:'▲'},
+        {r:6,name:'Axar Patel',flag:'🇮🇳',country:'India',rating:312,trend:'▲'},
+        {r:7,name:'Mitchell Marsh',flag:'🇦🇺',country:'Australia',rating:300,trend:'—'},
+        {r:8,name:'Thisara Perera',flag:'🇱🇰',country:'Sri Lanka',rating:290,trend:'▼'},
+      ],
+      test:[
+        {r:1,name:'Ben Stokes',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',country:'England',rating:442,trend:'▲'},
+        {r:2,name:'Ravichandran Ashwin',flag:'🇮🇳',country:'India',rating:420,trend:'▲'},
+        {r:3,name:'Jason Holder',flag:'🇼🇸',country:'West Indies',rating:395,trend:'—'},
+        {r:4,name:'Shakib Al Hasan',flag:'🇧🇩',country:'Bangladesh',rating:374,trend:'▼'},
+        {r:5,name:'Ravindra Jadeja',flag:'🇮🇳',country:'India',rating:365,trend:'▲'},
+        {r:6,name:'Mitchell Marsh',flag:'🇦🇺',country:'Australia',rating:342,trend:'—'},
+        {r:7,name:'Chris Woakes',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',country:'England',rating:328,trend:'▲'},
+        {r:8,name:'Kyle Jamieson',flag:'🇳🇿',country:'New Zealand',rating:314,trend:'▼'},
+      ]
+    },
+    team:{
+      odi:[
+        {r:1,name:'Australia',flag:'🇦🇺',country:'AUS',rating:118,trend:'—'},
+        {r:2,name:'India',flag:'🇮🇳',country:'IND',rating:115,trend:'▲'},
+        {r:3,name:'England',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',country:'ENG',rating:109,trend:'▼'},
+        {r:4,name:'New Zealand',flag:'🇳🇿',country:'NZ',rating:105,trend:'▲'},
+        {r:5,name:'South Africa',flag:'🇿🇦',country:'SA',rating:102,trend:'—'},
+        {r:6,name:'Pakistan',flag:'🇵🇰',country:'PAK',rating:99,trend:'▼'},
+        {r:7,name:'West Indies',flag:'🇼🇸',country:'WI',rating:88,trend:'▲'},
+        {r:8,name:'Sri Lanka',flag:'🇱🇰',country:'SL',rating:84,trend:'▼'},
+      ],
+      test:[
+        {r:1,name:'Australia',flag:'🇦🇺',country:'AUS',rating:128,trend:'▲'},
+        {r:2,name:'India',flag:'🇮🇳',country:'IND',rating:124,trend:'—'},
+        {r:3,name:'South Africa',flag:'🇿🇦',country:'SA',rating:108,trend:'▲'},
+        {r:4,name:'England',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',country:'ENG',rating:104,trend:'—'},
+        {r:5,name:'New Zealand',flag:'🇳🇿',country:'NZ',rating:99,trend:'▼'},
+        {r:6,name:'Pakistan',flag:'🇵🇰',country:'PAK',rating:95,trend:'▼'},
+        {r:7,name:'Sri Lanka',flag:'🇱🇰',country:'SL',rating:84,trend:'▲'},
+        {r:8,name:'Bangladesh',flag:'🇧🇩',country:'BAN',rating:78,trend:'—'},
+      ]
+    }
+  };
+
+  let currentRankType='batting';
+
+  function renderRankings(type){
+    currentRankType=type;
+    $('#rankTypeLabel').text(type.charAt(0).toUpperCase()+type.slice(1));
+    const odiData=rankData[type]?.odi||[];
+    const testData=rankData[type]?.test||[];
+    const maxR=Math.max(...odiData.map(d=>d.rating));
+    function buildRows(data,maxR){
+      return data.map(function(d){
+        const pct=Math.round((d.rating/maxR)*100);
+        const trendColor=d.trend==='▲'?'color:var(--green)':d.trend==='▼'?'color:var(--red)':'color:var(--muted)';
+        const topClass=d.r<=3?'top':'';
+        return `<tr>
+          <td><span class="rank-num ${topClass}">${d.r}</span></td>
+          <td class="player-name-cell"><span class="rank-flag">${d.flag}</span>${d.name||d.country}</td>
+          <td style="color:var(--muted)">${d.country}</td>
+          <td>
+            <div class="rating-bar-wrap">
+              <div class="rating-bar"><div class="rating-fill" style="width:${pct}%"></div></div>
+              <span class="rating-val">${d.rating}</span>
+            </div>
+          </td>
+          <td style="${trendColor};font-size:1rem;">${d.trend}</td>
+        </tr>`;
+      }).join('');
+    }
+    $('#odiBody').html(buildRows(odiData,maxR));
+    $('#testBody').html(buildRows(testData,maxR));
+  }
+
+  renderRankings('batting');
+
+  $('#rankFilter').on('click','.rf-btn',function(){
+    $('#rankFilter .rf-btn').removeClass('active');
+    $(this).addClass('active');
+    renderRankings($(this).data('rank'));
+  });
+
+  // ─── PLAYER FILTER ───
+  $('#playerSearch').on('input',function(){
+    const q=$(this).val().toLowerCase();
+    $('.player-card').each(function(){
+      const name=$(this).find('.player-info h3').text().toLowerCase();
+      const country=$(this).find('.player-info p').text().toLowerCase();
+      $(this).toggle(name.includes(q)||country.includes(q)||q==='');
+    });
+  });
+
+  $('.rank-filter').first().on('click','.rf-btn',function(){
+    $(this).closest('.rank-filter').find('.rf-btn').removeClass('active');
+    $(this).addClass('active');
+    const filter=$(this).data('filter');
+    if(filter==='all'){$('.player-card').show();}
+    else{$('.player-card').hide();$(`.player-card[data-role="${filter}"]`).show();}
+  });
+
+  // ─── LIVE SCORE TICKER (mock update) ───
+  let tickerScoreInd=287;
+  setInterval(function(){
+    if(Math.random()<.3){
+      tickerScoreInd+=Math.floor(Math.random()*7)+1;
+      console.log('Score update: IND '+tickerScoreInd);
+    }
+  },8000);
+
+});
+</script>
+</body>
+</html>
